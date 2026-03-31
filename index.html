@@ -6,28 +6,31 @@
     <title>Hemoterapia | Hospital Balestrini</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        :root { --primary: #0099cc; --bg: #f4f7f9; --dark: #1e293b; }
+        :root { --primary: #0099cc; --accent: #e11d48; --bg: #f4f7f9; --dark: #1e293b; --success: #10b981; --warning: #f59e0b; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--dark); margin: 0; padding: 0; }
-        .container { max-width: 850px; margin: 0 auto; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; padding: 15px; }
         header { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; margin-bottom: 20px; border-bottom: 5px solid var(--primary); }
-        .logo { max-width: 200px; height: auto; }
+        .logo { max-width: 180px; height: auto; }
         .card-main { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; }
         h2 { color: var(--primary); font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 0; display: flex; align-items: center; gap: 8px; }
-        .search-box { width: 100%; padding: 15px 15px 15px 45px; font-size: 1.1rem; border: 2px solid var(--primary); border-radius: 15px; box-sizing: border-box; outline: none; }
-        .search-container { position: relative; }
+        .search-container { position: relative; margin-bottom: 15px; }
+        .search-box { width: 100%; padding: 15px 15px 15px 45px; font-size: 1.1rem; border: 2px solid var(--primary); border-radius: 15px; box-sizing: border-box; outline: none; transition: 0.3s; }
+        .search-box:focus { box-shadow: 0 0 10px rgba(0,153,204,0.2); }
         .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--primary); }
-        .item-card { padding: 18px; background: #fff; border-radius: 12px; margin-bottom: 12px; border: 1px solid #edf2f7; border-left: 8px solid #cbd5e1; }
-        .item-card.permanente { border-left-color: #ef4444; }
-        .item-card.transitorio { border-left-color: #f59e0b; }
-        .item-card.nodifiere { border-left-color: #10b981; }
-        .header-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .code-label { font-family: monospace; font-weight: bold; color: #64748b; font-size: 0.8rem; }
-        .time-badge { background: var(--dark); color: white; padding: 4px 12px; border-radius: 50px; font-size: 0.85rem; font-weight: bold; }
-        .title-item { font-size: 1.1rem; font-weight: 700; color: #1e293b; margin-bottom: 5px; display: block; }
-        .info-detallada { font-size: 0.95rem; line-height: 1.5; color: #475569; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px dashed #cbd5e1; white-space: pre-line; }
+        .item-card { padding: 15px; background: #fff; border-radius: 12px; margin-bottom: 12px; border: 1px solid #edf2f7; border-left: 8px solid #cbd5e1; display: none; }
+        .item-card.permanente { border-left-color: var(--accent); }
+        .item-card.transitorio { border-left-color: var(--warning); }
+        .item-card.nodifiere { border-left-color: var(--success); }
+        .header-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+        .code-label { font-family: monospace; font-weight: bold; color: #64748b; font-size: 0.8rem; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; }
+        .time-badge { background: var(--dark); color: white; padding: 4px 12px; border-radius: 50px; font-size: 0.8rem; font-weight: bold; }
+        .title-item { font-size: 1.05rem; font-weight: 700; color: #1e293b; display: block; margin-bottom: 5px; }
+        .info-detallada { font-size: 0.9rem; line-height: 1.4; color: #475569; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px dashed #cbd5e1; white-space: pre-line; }
+        /* Calculador */
         .grid-calc { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end; }
-        .btn-calc { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; height: 48px; }
-        #resultado-calc { margin-top: 15px; padding: 15px; border-radius: 12px; display: none; text-align: center; border: 1px solid #bae6fd; font-weight: 600; }
+        .btn-calc { background: var(--primary); color: white; border: none; padding: 10px; border-radius: 10px; cursor: pointer; font-weight: bold; height: 45px; }
+        #resultado-calc { margin-top: 15px; padding: 12px; border-radius: 10px; display: none; text-align: center; font-size: 0.95rem; border: 1px solid #bae6fd; }
+        footer { text-align: center; padding: 20px; font-size: 0.8rem; color: #94a3b8; }
         @media (max-width: 600px) { .grid-calc { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -36,110 +39,12 @@
 <div class="container">
     <header>
         <img src="logo-balestrini.jpg" alt="Logo Hospital Balestrini" class="logo">
-        <h1 style="font-size: 1.3rem; margin: 10px 0 0;">HEMOTERAPIA OPERATIVA (PBA)</h1>
-        <p style="font-size: 0.85rem; color: #64748b; margin: 5px 0;">Referencia Técnica Actualizada: NO-2025-30567861</p>
+        <h1 style="font-size: 1.2rem; margin: 10px 0 0;">NORMATIVA HEMOTERAPIA 2025</h1>
+        <p style="font-size: 0.8rem; color: #64748b; margin: 4px 0;">Referencia Técnica: NO-2025-30567861-GDEBA</p>
     </header>
 
     <div class="card-main">
-        <h2><i class="fa-solid fa-magnifying-glass"></i> Buscador de Criterios Detallados</h2>
+        <h2><i class="fa-solid fa-magnifying-glass"></i> Buscador de Diferimientos y Valores</h2>
         <div class="search-container">
             <i class="fa-solid fa-search search-icon"></i>
-            <input type="text" id="searchInput" class="search-box" placeholder="Ej: Hemoglobina, Psoriasis, OT1, Tatuajes...">
-        </div>
-        <div id="results" style="margin-top: 20px;"></div>
-    </div>
-
-    <div class="card-main">
-        <h2><i class="fa-solid fa-calculator"></i> Calculador de Próxima Donación</h2>
-        <div class="grid-calc">
-            <div><label style="font-size: 0.8rem; font-weight: bold;">Última donación:</label><input type="date" id="fechaUltima"></div>
-            <div><label style="font-size: 0.8rem; font-weight: bold;">Donante:</label>
-                <select id="tipoDonante">
-                    <option value="8">Masculino (8 semanas)</option>
-                    <option value="12">Femenino (12 semanas)</option>
-                    <option value="26">Menor 16-18 años (6 meses)</option>
-                </select>
-            </div>
-            <button class="btn-calc" onclick="calcular()">CALCULAR</button>
-        </div>
-        <div id="resultado-calc"></div>
-    </div>
-</div>
-
-<script>
-    function calcular() {
-        const f = document.getElementById('fechaUltima').value;
-        const s = document.getElementById('tipoDonante').value;
-        const r = document.getElementById('resultado-calc');
-        if(!f) return;
-        let d = new Date(f);
-        d.setDate(d.getDate() + (s * 7));
-        r.style.display = 'block';
-        r.style.background = '#f0f9ff';
-        r.innerHTML = `Apto para nueva extracción el: <strong>${d.toLocaleDateString('es-AR', {dateStyle:'full'})}</strong>`;
-    }
-
-    const db = [
-        { 
-            c: "ESTADO DE SALUD", 
-            d: "Hemoglobina / Hematocrito", 
-            t: "12,5 a 17 gr/dl | 38 a 52%", 
-            i: "La concentración de hemoglobina deberá estar comprendida entre 12,5 y 17 gr/dl. El hematocrito deberá estar comprendido entre 38 y 52%. \n\nConducta HE7: Si Hb es menor de 12,5 gr/dl, diferir por 6 meses y derivar para estudio.",
-            cat: "nodifiere" 
-        },
-        { 
-            c: "ESTADO DE SALUD", 
-            d: "Tensión Arterial (Sistólica / Diastólica)", 
-            t: "100-170 / 60-100 mmHg", 
-            i: "La tensión sistólica no deberá ser mayor de 170 mmHg ni menor de 100 mmHg. La diastólica no deberá ser mayor de 100 mmHg ni menor de 60 mmHg. Parámetro sujeto a evaluación médica.",
-            cat: "nodifiere" 
-        },
-        { 
-            c: "DR11", 
-            d: "Psoriasis (Diferimiento)", 
-            t: "6 Meses / Permanente", 
-            i: "Psoriasis luego de un brote no tratado con Acitretina o Tigason: 6 meses (DR11). \nSi el tratamiento es sistémico con Acitretina o Tigason: 2 años (DR5) o Permanente (MD1) si usa medicación biológica.",
-            cat: "transitorio" 
-        },
-        { 
-            c: "MD", 
-            d: "Aspirina / Analgésicos menores", 
-            t: "Sin diferimiento", 
-            i: "No requiere diferimiento si el donante está clínicamente bien. Nota: Si la donación es de plaquetas por aféresis, se requiere suspender 48-72hs.",
-            cat: "nodifiere" 
-        },
-        { 
-            c: "IN21", 
-            d: "Dengue", 
-            t: "1 Mes", 
-            i: "Diferimiento de 1 mes desde el alta médica definitiva. Si fue Dengue Hemorrágico, el diferimiento es de 4 meses (IN15).",
-            cat: "transitorio" 
-        },
-        { 
-            c: "QX10", 
-            d: "Endoscopías (VEDA - VCC)", 
-            t: "6 Meses", 
-            i: "Diferimiento de 6 meses para endoscopías con o sin biopsia, con resultado normal.",
-            cat: "transitorio" 
-        }
-    ];
-
-    const input = document.getElementById('searchInput');
-    const res = document.getElementById('results');
-
-    function buscar() {
-        const v = input.value.toLowerCase().trim();
-        res.innerHTML = '';
-        if(!v) return;
-        const filtrados = db.filter(i => i.d.toLowerCase().includes(v) || i.c.toLowerCase().includes(v) || i.i.toLowerCase().includes(v));
-        filtrados.forEach(i => {
-            const div = document.createElement('div');
-            div.className = `item-card ${i.cat}`;
-            div.innerHTML = `<div class="header-item"><span class="code-label">${i.c}</span><span class="time-badge">${i.t}</span></div><span class="title-item">${i.d}</span><div class="info-detallada">${i.i}</div>`;
-            res.appendChild(div);
-        });
-    }
-    input.addEventListener('input', buscar);
-</script>
-</body>
-</html>
+            <input type="text" id="searchInput" class="search-box" placeholder="Ej: CV2, TBC, Hem
