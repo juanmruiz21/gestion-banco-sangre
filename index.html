@@ -3,83 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criterios Hemoterapia | Provincia de BSAS 2025</title>
+    <title>Gestión Hemoterapia | Hospital Balestrini</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        :root { --primary: #e11d48; --bg: #f8fafc; --text: #1e293b; }
-        body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: 0 auto; }
-        header { text-align: center; margin-bottom: 30px; border-bottom: 3px solid var(--primary); padding-bottom: 20px; }
-        .search-box { width: 100%; padding: 15px; font-size: 1.1rem; border: 2px solid #ddd; border-radius: 12px; margin-bottom: 20px; box-sizing: border-box; }
-        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 15px; border-left: 5px solid #64748b; }
-        .card.permanente { border-left-color: #ef4444; }
-        .card.transitorio { border-left-color: #f59e0b; }
-        .card.nodifiere { border-left-color: #10b981; }
-        .tag { font-size: 0.8rem; font-weight: bold; text-transform: uppercase; padding: 4px 8px; border-radius: 4px; background: #eee; margin-right: 5px; }
-        .tiempo { color: var(--primary); font-weight: bold; }
-        .footer-info { font-size: 0.85rem; color: #64748b; margin-top: 50px; text-align: center; line-height: 1.6; }
+        :root { --primary: #0099cc; --accent: #e11d48; --bg: #f1f5f9; --dark: #1e293b; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--dark); margin: 0; line-height: 1.6; }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        
+        /* Encabezado con Logo */
+        header { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: center; margin-bottom: 30px; border-top: 8px solid var(--primary); }
+        .logo { max-width: 280px; height: auto; margin-bottom: 15px; }
+        h1 { margin: 10px 0; color: var(--dark); font-size: 1.8rem; }
+
+        /* Calculador */
+        .calculator-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); margin-bottom: 30px; border: 1px solid #e2e8f0; }
+        .grid-calc { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; align-items: end; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 0.9rem; }
+        input, select { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
+        .btn-calc { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .btn-calc:hover { background: #0077a3; }
+        #resultado-calc { margin-top: 20px; padding: 15px; border-radius: 8px; display: none; text-align: center; font-weight: bold; }
+
+        /* Buscador */
+        .search-section { margin-top: 40px; }
+        .search-box { width: 100%; padding: 18px; font-size: 1.1rem; border: 2px solid var(--primary); border-radius: 50px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,153,204,0.1); outline: none; }
+        .card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 15px; border-left: 6px solid #94a3b8; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
+        .card:hover { transform: translateX(5px); }
+        .card.permanente { border-left-color: #ef4444; background: #fff5f5; }
+        .card.transitorio { border-left-color: #f59e0b; background: #fffbeb; }
+        .card.nodifiere { border-left-color: #10b981; background: #f0fdf4; }
+        .code { background: #eee; padding: 3px 8px; border-radius: 4px; font-family: monospace; font-weight: bold; font-size: 0.8rem; }
+        .tiempo-badge { background: var(--dark); color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; }
+
+        @media (max-width: 600px) { .grid-calc { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1><i class="fa-solid fa-droplet"></i> Criterios de Diferimiento</h1>
-        <p>Normativa Actualizada: Agosto 2025 (PBA)</p>
+        <img src="logo-balestrini.jpg" alt="Hospital Balestrini" class="logo">
+        <h1>Sistema de Consulta y Gestión</h1>
+        <p style="color: #64748b;">Normativa Técnica PBA - Actualización Agosto 2025</p>
     </header>
 
-    <input type="text" id="searchInput" class="search-box" placeholder="Buscar medicación, vacuna o enfermedad (ej: Tatuaje, Sabin, Aspirina)...">
-
-    <div id="results"></div>
-
-    <div class="footer-info">
-        <p><strong>Información Importante:</strong> El periodo mínimo entre donaciones es de 8 semanas para hombres y 12 semanas para mujeres.</p>
-        <p>Referencia: NO-2025-30567861-GDEBA-DPIHPBAMSALGP</p>
+    <div class="calculator-card">
+        <h3 style="margin-top:0; color: var(--primary);"><i class="fa-solid fa-calendar-check"></i> Calculador de Próxima Donación</h3>
+        <div class="grid-calc">
+            <div>
+                <label>Última donación:</label>
+                <input type="date" id="fechaUltima">
+            </div>
+            <div>
+                <label>Género / Edad:</label>
+                <select id="tipoDonante">
+                    <option value="8">Masculino (8 semanas)</option>
+                    <option value="12">Femenino (12 semanas)</option>
+                    <option value="26">Menor 16-18 años (6 meses)</option>
+                </select>
+            </div>
+            <button class="btn-calc" onclick="calcularFecha()">CALCULAR FECHA</button>
+        </div>
+        <div id="resultado-calc"></div>
     </div>
+
+    <div class="search-section">
+        <h3 style="color: var(--dark);"><i class="fa-solid fa-magnifying-glass"></i> Buscador de Criterios de Diferimiento</h3>
+        <input type="text" id="searchInput" class="search-box" placeholder="Buscar medicación, vacuna, cirugía o condición...">
+        <div id="results"></div>
+    </div>
+
+    <p style="text-align: center; font-size: 0.8rem; color: #94a3b8; margin-top: 40px;">
+        Referencia Normativa: [cite: 4] <br>
+        Hospital Zonal General Dr. Alberto Balestrini - Servicio de Hemoterapia
+    </p>
 </div>
 
 <script>
-    // Datos extraídos directamente de tu PDF
-    const baseDatos = [
-        { c: "DR7", t: "1 año", d: "Tatuajes / Maquillaje permanente / Acupuntura", cat: "transitorio" },
-        { c: "DR8", t: "6 meses", d: "Piercing / Tatuaje con material propio", cat: "transitorio" },
-        { c: "MD1", t: "Permanente", d: "Insulina, Digoxina, Anticoagulantes, Antipsicóticos", cat: "permanente" },
-        { c: "MD6", t: "7 días", d: "Antibióticos (una vez terminados)", cat: "transitorio" },
-        { c: "VC2", t: "1 mes", d: "Vacuna Sabin (Polio oral), Triple Viral, Sarampión, Rubéola, Varicela", cat: "transitorio" },
-        { c: "VC", t: "Sin diferimiento", d: "Vacuna Salk, Antigripal (Influenza), Hepatitis A/B (sin exposición), HPV", cat: "nodifiere" },
-        { c: "GO3", t: "1 año", d: "Parto, Cesárea o Aborto con transfusiones", cat: "transitorio" },
-        { c: "GO4", t: "6 meses", d: "Parto, Cesárea o Aborto sin transfusiones", cat: "transitorio" },
-        { c: "IN3", t: "Permanente", d: "Chagas, Brucelosis, Sífilis, Hepatitis B/C, VIH, HTLV", cat: "permanente" },
-        { c: "IN21", t: "1 mes", d: "Dengue (luego de curado)", cat: "transitorio" },
-        { c: "HE7", t: "6 meses", d: "Hb Baja (menos de 12,5 g/dl) - Derivar", cat: "transitorio" },
-        { c: "QX11", t: "6 meses", d: "Cirugía sin transfusiones con alta médica", cat: "transitorio" },
-        { c: "MD", t: "Sin diferimiento", d: "Anticonceptivos, Vitaminas, Analgésicos menores, Antihistamínicos", cat: "nodifiere" }
+    // Función Calculadora basada en normativa (Página 3 del PDF)
+    function calcularFecha() {
+        const fechaIn = document.getElementById('fechaUltima').value;
+        const semanas = parseInt(document.getElementById('tipoDonante').value);
+        const resDiv = document.getElementById('resultado-calc');
+
+        if(!fechaIn) {
+            alert("Por favor, seleccioná una fecha.");
+            return;
+        }
+
+        let fecha = new Date(fechaIn);
+        // Ajustamos por semanas (7 días por semana) 
+        fecha.setDate(fecha.getDate() + (semanas * 7));
+
+        const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        resDiv.style.display = 'block';
+        resDiv.style.background = '#e0f2fe';
+        resDiv.style.color = '#0369a1';
+        resDiv.innerHTML = `<i class="fa-solid fa-calendar-day"></i> Apto para próxima donación el:<br><span style="font-size:1.2rem">${fecha.toLocaleDateString('es-AR', opciones)}</span>`;
+    }
+
+    // Base de datos inteligente con códigos oficiales del PDF
+    const criterios = [
+        { c: "DR7", d: "Tatuajes, Maquillaje permanente, Acupuntura", t: "1 año", cat: "transitorio" }, // [cite: 125]
+        { c: "DR8", d: "Piercing / Tatuaje material propio", t: "6 meses", cat: "transitorio" }, // [cite: 125]
+        { c: "IN21", d: "Dengue (luego del alta)", t: "1 mes", cat: "transitorio" }, // [cite: 130]
+        { c: "MD1", d: "Insulina, Digoxina, Antipsicóticos, Anticoagulantes", t: "Permanente", cat: "permanente" }, // [cite: 96, 135]
+        { c: "VC2", d: "Vacunas: Sabin (Polio oral), Triple Viral, Varicela", t: "1 mes", cat: "transitorio" }, // [cite: 108, 109, 112]
+        { c: "MD", d: "Anticonceptivos, Analgésicos menores, Vitaminas", t: "Sin diferimiento", cat: "nodifiere" }, // [cite: 106]
+        { c: "GO4", d: "Parto o Cesárea (sin transfusiones)", t: "6 meses", cat: "transitorio" }, // [cite: 80, 127]
+        { c: "QX11", d: "Cirugía menor sin transfusiones (con alta)", t: "6 meses", cat: "transitorio" }, // [cite: 132]
+        { c: "QX14", d: "Extracción dental simple (sin antibióticos)", t: "3 días", cat: "transitorio" }, // [cite: 133]
+        { c: "IN1", d: "Consumo de drogas IV (Toxicomanía)", t: "Permanente", cat: "permanente" }, // [cite: 128]
+        { c: "HE7", d: "Hemoglobina baja (Anemia < 12,5 g/dl)", t: "6 meses / Derivar", cat: "transitorio" } // [cite: 71, 127]
     ];
 
     const searchInput = document.getElementById('searchInput');
     const resultsDiv = document.getElementById('results');
 
-    function buscar() {
-        const term = searchInput.value.toLowerCase();
+    function filtrar() {
+        const busqueda = searchInput.value.toLowerCase();
         resultsDiv.innerHTML = '';
         
-        const filtrados = baseDatos.filter(item => 
-            item.d.toLowerCase().includes(term) || item.c.toLowerCase().includes(term)
-        );
+        const fitro = criterios.filter(i => i.d.toLowerCase().includes(busqueda) || i.c.toLowerCase().includes(busqueda));
 
-        filtrados.forEach(item => {
-            const card = document.createElement('div');
-            card.className = `card ${item.cat}`;
-            card.innerHTML = `
-                <div><span class="tag">${item.c}</span> <strong>${item.d}</strong></div>
-                <div style="margin-top:10px">Tiempo: <span class="tiempo">${item.t}</span></div>
+        fitro.forEach(i => {
+            const div = document.createElement('div');
+            div.className = `card ${i.cat}`;
+            div.innerHTML = `
+                <div>
+                    <span class="code">${i.c}</span><br>
+                    <strong>${i.d}</strong>
+                </div>
+                <div class="tiempo-badge">${i.t}</div>
             `;
-            resultsDiv.appendChild(card);
+            resultsDiv.appendChild(div);
         });
     }
 
-    searchInput.addEventListener('input', buscar);
-    buscar(); // Mostrar todos al inicio
+    searchInput.addEventListener('input', filtrar);
+    filtrar();
 </script>
 
 </body>
