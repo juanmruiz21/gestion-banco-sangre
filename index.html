@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criterios Hemoterapia | Provincia de BSAS 2025</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root { --primary: #e11d48; --bg: #f8fafc; --text: #1e293b; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; border-bottom: 3px solid var(--primary); padding-bottom: 20px; }
+        .search-box { width: 100%; padding: 15px; font-size: 1.1rem; border: 2px solid #ddd; border-radius: 12px; margin-bottom: 20px; box-sizing: border-box; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 15px; border-left: 5px solid #64748b; }
+        .card.permanente { border-left-color: #ef4444; }
+        .card.transitorio { border-left-color: #f59e0b; }
+        .card.nodifiere { border-left-color: #10b981; }
+        .tag { font-size: 0.8rem; font-weight: bold; text-transform: uppercase; padding: 4px 8px; border-radius: 4px; background: #eee; margin-right: 5px; }
+        .tiempo { color: var(--primary); font-weight: bold; }
+        .footer-info { font-size: 0.85rem; color: #64748b; margin-top: 50px; text-align: center; line-height: 1.6; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1><i class="fa-solid fa-droplet"></i> Criterios de Diferimiento</h1>
+        <p>Normativa Actualizada: Agosto 2025 (PBA)</p>
+    </header>
+
+    <input type="text" id="searchInput" class="search-box" placeholder="Buscar medicación, vacuna o enfermedad (ej: Tatuaje, Sabin, Aspirina)...">
+
+    <div id="results"></div>
+
+    <div class="footer-info">
+        <p><strong>Información Importante:</strong> El periodo mínimo entre donaciones es de 8 semanas para hombres y 12 semanas para mujeres.</p>
+        <p>Referencia: NO-2025-30567861-GDEBA-DPIHPBAMSALGP</p>
+    </div>
+</div>
+
+<script>
+    // Datos extraídos directamente de tu PDF
+    const baseDatos = [
+        { c: "DR7", t: "1 año", d: "Tatuajes / Maquillaje permanente / Acupuntura", cat: "transitorio" },
+        { c: "DR8", t: "6 meses", d: "Piercing / Tatuaje con material propio", cat: "transitorio" },
+        { c: "MD1", t: "Permanente", d: "Insulina, Digoxina, Anticoagulantes, Antipsicóticos", cat: "permanente" },
+        { c: "MD6", t: "7 días", d: "Antibióticos (una vez terminados)", cat: "transitorio" },
+        { c: "VC2", t: "1 mes", d: "Vacuna Sabin (Polio oral), Triple Viral, Sarampión, Rubéola, Varicela", cat: "transitorio" },
+        { c: "VC", t: "Sin diferimiento", d: "Vacuna Salk, Antigripal (Influenza), Hepatitis A/B (sin exposición), HPV", cat: "nodifiere" },
+        { c: "GO3", t: "1 año", d: "Parto, Cesárea o Aborto con transfusiones", cat: "transitorio" },
+        { c: "GO4", t: "6 meses", d: "Parto, Cesárea o Aborto sin transfusiones", cat: "transitorio" },
+        { c: "IN3", t: "Permanente", d: "Chagas, Brucelosis, Sífilis, Hepatitis B/C, VIH, HTLV", cat: "permanente" },
+        { c: "IN21", t: "1 mes", d: "Dengue (luego de curado)", cat: "transitorio" },
+        { c: "HE7", t: "6 meses", d: "Hb Baja (menos de 12,5 g/dl) - Derivar", cat: "transitorio" },
+        { c: "QX11", t: "6 meses", d: "Cirugía sin transfusiones con alta médica", cat: "transitorio" },
+        { c: "MD", t: "Sin diferimiento", d: "Anticonceptivos, Vitaminas, Analgésicos menores, Antihistamínicos", cat: "nodifiere" }
+    ];
+
+    const searchInput = document.getElementById('searchInput');
+    const resultsDiv = document.getElementById('results');
+
+    function buscar() {
+        const term = searchInput.value.toLowerCase();
+        resultsDiv.innerHTML = '';
+        
+        const filtrados = baseDatos.filter(item => 
+            item.d.toLowerCase().includes(term) || item.c.toLowerCase().includes(term)
+        );
+
+        filtrados.forEach(item => {
+            const card = document.createElement('div');
+            card.className = `card ${item.cat}`;
+            card.innerHTML = `
+                <div><span class="tag">${item.c}</span> <strong>${item.d}</strong></div>
+                <div style="margin-top:10px">Tiempo: <span class="tiempo">${item.t}</span></div>
+            `;
+            resultsDiv.appendChild(card);
+        });
+    }
+
+    searchInput.addEventListener('input', buscar);
+    buscar(); // Mostrar todos al inicio
+</script>
+
+</body>
+</html>
