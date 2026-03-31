@@ -6,7 +6,7 @@
     <title>Hemoterapia | Hospital Balestrini</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        :root { --primary: #0099cc; --accent: #e11d48; --bg: #f4f7f9; --dark: #1e293b; }
+        :root { --primary: #0099cc; --bg: #f4f7f9; --dark: #1e293b; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--dark); margin: 0; padding: 0; }
         .container { max-width: 850px; margin: 0 auto; padding: 20px; }
         header { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; margin-bottom: 20px; border-bottom: 5px solid var(--primary); }
@@ -24,11 +24,10 @@
         .code-label { font-family: monospace; font-weight: bold; color: #64748b; font-size: 0.8rem; }
         .time-badge { background: var(--dark); color: white; padding: 4px 12px; border-radius: 50px; font-size: 0.85rem; font-weight: bold; }
         .title-item { font-size: 1.1rem; font-weight: 700; color: #1e293b; margin-bottom: 5px; display: block; }
-        .info-detallada { font-size: 0.95rem; line-height: 1.5; color: #475569; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px dashed #cbd5e1; }
+        .info-detallada { font-size: 0.95rem; line-height: 1.5; color: #475569; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px dashed #cbd5e1; white-space: pre-line; }
         .grid-calc { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end; }
         .btn-calc { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; height: 48px; }
         #resultado-calc { margin-top: 15px; padding: 15px; border-radius: 12px; display: none; text-align: center; border: 1px solid #bae6fd; font-weight: 600; }
-        footer { text-align: center; font-size: 0.8rem; color: #94a3b8; padding: 20px; }
         @media (max-width: 600px) { .grid-calc { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -37,39 +36,34 @@
 <div class="container">
     <header>
         <img src="logo-balestrini.jpg" alt="Logo Hospital Balestrini" class="logo">
-        <h1 style="font-size: 1.3rem; margin: 10px 0 0;">CONSULTA TÉCNICA HEMOTERAPIA</h1>
-        <p style="font-size: 0.85rem; color: #64748b; margin: 5px 0;">Referencia: NO-2025-30567861 (PBA)</p>
+        <h1 style="font-size: 1.3rem; margin: 10px 0 0;">HEMOTERAPIA OPERATIVA (PBA)</h1>
+        <p style="font-size: 0.85rem; color: #64748b; margin: 5px 0;">Referencia Técnica Actualizada: NO-2025-30567861</p>
     </header>
 
     <div class="card-main">
-        <h2><i class="fa-solid fa-magnifying-glass"></i> Buscador de Criterios (Información Completa)</h2>
+        <h2><i class="fa-solid fa-magnifying-glass"></i> Buscador de Criterios Detallados</h2>
         <div class="search-container">
             <i class="fa-solid fa-search search-icon"></i>
-            <input type="text" id="searchInput" class="search-box" placeholder="Hematocrito, Presión, OT2, Psoriasis, Aspirina...">
+            <input type="text" id="searchInput" class="search-box" placeholder="Ej: Hemoglobina, Psoriasis, OT1, Tatuajes...">
         </div>
         <div id="results" style="margin-top: 20px;"></div>
     </div>
 
     <div class="card-main">
-        <h2><i class="fa-solid fa-calendar-plus"></i> Calculador de Intervalos</h2>
+        <h2><i class="fa-solid fa-calculator"></i> Calculador de Próxima Donación</h2>
         <div class="grid-calc">
             <div><label style="font-size: 0.8rem; font-weight: bold;">Última donación:</label><input type="date" id="fechaUltima"></div>
-            <div><label style="font-size: 0.8rem; font-weight: bold;">Frecuencia:</label>
+            <div><label style="font-size: 0.8rem; font-weight: bold;">Donante:</label>
                 <select id="tipoDonante">
-                    <option value="8">Hombre (8 semanas)</option>
-                    <option value="12">Mujer (12 semanas)</option>
+                    <option value="8">Masculino (8 semanas)</option>
+                    <option value="12">Femenino (12 semanas)</option>
                     <option value="26">Menor 16-18 años (6 meses)</option>
                 </select>
             </div>
-            <button class="btn-calc" onclick="calcular()">CALCULAR FECHA</button>
+            <button class="btn-calc" onclick="calcular()">CALCULAR</button>
         </div>
         <div id="resultado-calc"></div>
     </div>
-
-    <footer>
-        Hospital Balestrini - Servicio de Hemoterapia<br>
-        Provincia de Buenos Aires
-    </footer>
 </div>
 
 <script>
@@ -82,16 +76,70 @@
         d.setDate(d.getDate() + (s * 7));
         r.style.display = 'block';
         r.style.background = '#f0f9ff';
-        r.innerHTML = `Próxima fecha apta: <strong>${d.toLocaleDateString('es-AR', {dateStyle:'full'})}</strong>`;
+        r.innerHTML = `Apto para nueva extracción el: <strong>${d.toLocaleDateString('es-AR', {dateStyle:'full'})}</strong>`;
     }
 
     const db = [
-        // RANGOS CLÍNICOS (PAG 3)
-        { c: "RANGO", d: "Hematocrito / Hemoglobina", t: "≥ 38% / ≥ 12,5 g/dl", i: "Valor mínimo para la donación. Diferimiento de 6 meses (HE7) si es menor. Se recomienda derivación médica.", cat: "nodifiere" },
-        { c: "RANGO", d: "Tensión Arterial (Presión)", t: "Máx 160/100 | Mín 90/60", i: "Sistólica: entre 90 y 160 mmHg. Diastólica: entre 60 y 100 mmHg. Si está medicado y controlado, puede donar.", cat: "nodifiere" },
-        { c: "RANGO", d: "Frecuencia Cardíaca (Pulso)", t: "60 - 100 lpm", i: "Debe ser regular. Si presenta arritmias o valores fuera de rango, diferir según criterio médico.", cat: "nodifiere" },
-        { c: "EDAD", d: "Donantes 16 a 65 años", t: "Ver excepciones", i: "16-18 años: Con autorización y cada 6 meses. Mayores de 65: Con certificado médico anual y última donación en los últimos 2 años.", cat: "transitorio" },
+        { 
+            c: "ESTADO DE SALUD", 
+            d: "Hemoglobina / Hematocrito", 
+            t: "12,5 a 17 gr/dl | 38 a 52%", 
+            i: "La concentración de hemoglobina deberá estar comprendida entre 12,5 y 17 gr/dl. El hematocrito deberá estar comprendido entre 38 y 52%. \n\nConducta HE7: Si Hb es menor de 12,5 gr/dl, diferir por 6 meses y derivar para estudio.",
+            cat: "nodifiere" 
+        },
+        { 
+            c: "ESTADO DE SALUD", 
+            d: "Tensión Arterial (Sistólica / Diastólica)", 
+            t: "100-170 / 60-100 mmHg", 
+            i: "La tensión sistólica no deberá ser mayor de 170 mmHg ni menor de 100 mmHg. La diastólica no deberá ser mayor de 100 mmHg ni menor de 60 mmHg. Parámetro sujeto a evaluación médica.",
+            cat: "nodifiere" 
+        },
+        { 
+            c: "DR11", 
+            d: "Psoriasis (Diferimiento)", 
+            t: "6 Meses / Permanente", 
+            i: "Psoriasis luego de un brote no tratado con Acitretina o Tigason: 6 meses (DR11). \nSi el tratamiento es sistémico con Acitretina o Tigason: 2 años (DR5) o Permanente (MD1) si usa medicación biológica.",
+            cat: "transitorio" 
+        },
+        { 
+            c: "MD", 
+            d: "Aspirina / Analgésicos menores", 
+            t: "Sin diferimiento", 
+            i: "No requiere diferimiento si el donante está clínicamente bien. Nota: Si la donación es de plaquetas por aféresis, se requiere suspender 48-72hs.",
+            cat: "nodifiere" 
+        },
+        { 
+            c: "IN21", 
+            d: "Dengue", 
+            t: "1 Mes", 
+            i: "Diferimiento de 1 mes desde el alta médica definitiva. Si fue Dengue Hemorrágico, el diferimiento es de 4 meses (IN15).",
+            cat: "transitorio" 
+        },
+        { 
+            c: "QX10", 
+            d: "Endoscopías (VEDA - VCC)", 
+            t: "6 Meses", 
+            i: "Diferimiento de 6 meses para endoscopías con o sin biopsia, con resultado normal.",
+            cat: "transitorio" 
+        }
+    ];
 
-        // MEDICAMENTOS E INFECTO (PAG 11-15)
-        { c: "MD1", d: "Psoriasis (Tratamiento Sistémico)", t: "Permanente", i: "Si usa Metotrexato, Acitretina o medicamentos biológicos, el diferimiento es PERMANENTE según anexo. Si es local/tópico leve, consultar médico.", cat: "permanente" },
-        { c: "MD", d: "Aspirina / AINES / Analgésicos", t: "Sin Diferimiento", i: "Si el donante está asintom
+    const input = document.getElementById('searchInput');
+    const res = document.getElementById('results');
+
+    function buscar() {
+        const v = input.value.toLowerCase().trim();
+        res.innerHTML = '';
+        if(!v) return;
+        const filtrados = db.filter(i => i.d.toLowerCase().includes(v) || i.c.toLowerCase().includes(v) || i.i.toLowerCase().includes(v));
+        filtrados.forEach(i => {
+            const div = document.createElement('div');
+            div.className = `item-card ${i.cat}`;
+            div.innerHTML = `<div class="header-item"><span class="code-label">${i.c}</span><span class="time-badge">${i.t}</span></div><span class="title-item">${i.d}</span><div class="info-detallada">${i.i}</div>`;
+            res.appendChild(div);
+        });
+    }
+    input.addEventListener('input', buscar);
+</script>
+</body>
+</html>
