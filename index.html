@@ -11,12 +11,12 @@
         .container { max-width: 850px; margin: 0 auto; padding: 15px; }
         header { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; margin-bottom: 20px; border-bottom: 5px solid var(--primary); }
         .logo { max-width: 180px; height: auto; }
-        .card-main { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .card-main { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #eee; }
         h2 { color: var(--primary); font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 0; display: flex; align-items: center; gap: 8px; }
-        .search-box { width: 100%; padding: 15px 15px 15px 45px; font-size: 1.1rem; border: 2px solid var(--primary); border-radius: 15px; box-sizing: border-box; outline: none; }
         .search-container { position: relative; margin-bottom: 15px; }
+        .search-box { width: 100%; padding: 15px 15px 15px 45px; font-size: 1.1rem; border: 2px solid var(--primary); border-radius: 15px; box-sizing: border-box; outline: none; transition: 0.3s; }
         .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--primary); }
-        .item-card { padding: 15px; background: #fff; border-radius: 12px; margin-bottom: 12px; border: 1px solid #edf2f7; border-left: 8px solid #cbd5e1; }
+        .item-card { padding: 15px; background: #fff; border-radius: 12px; margin-bottom: 12px; border: 1px solid #edf2f7; border-left: 8px solid #cbd5e1; display: none; }
         .item-card.permanente { border-left-color: var(--accent); }
         .item-card.transitorio { border-left-color: var(--warning); }
         .item-card.nodifiere { border-left-color: var(--success); }
@@ -27,23 +27,24 @@
         .info-detallada { font-size: 0.9rem; line-height: 1.4; color: #475569; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px dashed #cbd5e1; white-space: pre-line; }
         .grid-calc { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end; }
         .btn-calc { background: var(--primary); color: white; border: none; padding: 10px; border-radius: 10px; cursor: pointer; font-weight: bold; height: 45px; }
-        #resultado-calc { margin-top: 15px; padding: 12px; border-radius: 10px; display: none; text-align: center; border: 1px solid #bae6fd; }
+        #resultado-calc { margin-top: 15px; padding: 12px; border-radius: 10px; display: none; text-align: center; font-size: 0.95rem; border: 1px solid #bae6fd; }
+        footer { text-align: center; padding: 20px; font-size: 0.8rem; color: #94a3b8; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <img src="logo-balestrini.jpg" alt="Logo Balestrini" class="logo">
+        <img src="logo-balestrini.jpg" alt="Logo Hospital Balestrini" class="logo">
         <h1 style="font-size: 1.2rem; margin: 10px 0 0;">HEMOTERAPIA OPERATIVA (PBA)</h1>
-        <p style="font-size: 0.8rem; color: #64748b;">Referencia: NO-2025-30567861 | Apartado Vacunas</p>
+        <p style="font-size: 0.8rem; color: #64748b; margin: 4px 0;">Base: Ley 22.990 & Resumen Criterios 2025</p>
     </header>
 
     <div class="card-main">
         <h2><i class="fa-solid fa-magnifying-glass"></i> Buscador de Diferimientos</h2>
         <div class="search-container">
             <i class="fa-solid fa-search search-icon"></i>
-            <input type="text" id="searchInput" class="search-box" placeholder="Ej: Sabin, Gripe, Rabia, Stent, TBC...">
+            <input type="text" id="searchInput" class="search-box" placeholder="Ej: Sabin, PREP, Stent, TBC, Hemoglobina...">
         </div>
         <div id="resultsList"></div>
     </div>
@@ -75,47 +76,21 @@
         d.setDate(d.getDate() + (s * 7 + 1));
         r.style.display = 'block';
         r.style.background = '#f0f9ff';
-        r.innerHTML = `Apto para nueva extracción el: <strong>${d.toLocaleDateString('es-AR', {dateStyle:'full'})}</strong>`;
+        r.innerHTML = `Próxima fecha apta: <strong>${d.toLocaleDateString('es-AR', {dateStyle:'full'})}</strong>`;
     }
 
     const db = [
-        // VACUNAS (VC) - SEGÚN PDF 2025
-        { c: "VC1", d: "Vacuna Antirrábica (Mordedura)", t: "1 Año", i: "Diferimiento de 12 meses si hubo mordedura o exposición de riesgo.\nSi fue profiláctica (sin mordedura): No difiere.", cat: "transitorio" },
-        { c: "VC2", d: "Vacuna Sabin / BCG / Fiebre Amarilla / Sarampión", t: "4 Semanas", i: "Vacunas a virus vivos atenuados o bacterias vivas: Sabin oral, BCG, Fiebre Amarilla, Sarampión, Rubéola, Paperas (MMR), Varicela y Fiebre Tifoidea oral.", cat: "transitorio" },
-        { c: "VC3", d: "Vacuna Gripe / COVID / Tétanos / Hepatitis A-B", t: "No difiere", i: "Vacunas con virus/bacterias muertas o inactivadas: Gripe, Neumococo, Tétanos, Difteria, Pertussis, Hepatitis A y B, Meningococo, VPH y Salk (IPV). Siempre que el donante esté asintomático.", cat: "nodifiere" },
-        { c: "VC4", d: "Gammaglobulinas (Post-exposición)", t: "1 Año", i: "Administración por exposición a Hepatitis B, Rabia o Tétanos.", cat: "transitorio" },
+        // PARÁMETROS FÍSICOS
+        { c: "VALOR", d: "Hemoglobina / Hematocrito", t: "12,5 a 17 gr/dl", i: "Hb: 12,5 a 17 gr/dl. Hto: 38% a 52%.\nHE7 (T-6 meses): Si Hb < 12,5.", cat: "nodifiere" },
+        { c: "VALOR", d: "Tensión Arterial (TA)", t: "100-170 / 60-100 mmHg", i: "Sistólica: 100-170. Diastólica: 60-100.\nCV10 (T-1 mes): HTA al momento de donar.", cat: "nodifiere" },
+        { c: "VALOR", d: "Peso Mínimo", t: "50 kg", i: "El donante debe pesar al menos 50 kg para ser apto.", cat: "nodifiere" },
 
-        // CARDIO (CV)
-        { c: "CV9", d: "Stent / Cateterismo / Angioplastia", t: "6 Meses", i: "Diferimiento por estudios hemodinámicos y procedimientos invasivos cardiovasculares.", cat: "transitorio" },
-        
-        // INFECTO (IN)
-        { c: "IN7", d: "Tuberculosis (TBC)", t: "2 Años", i: "Diferimiento tras la curación definitiva.", cat: "transitorio" },
-        
-        // VALORES CLÍNICOS
-        { c: "HE7", d: "Hemoglobina Baja (Anemia)", t: "6 Meses", i: "Si la Hb es < 12,5 gr/dl. Derivar para estudio.", cat: "transitorio" },
-        { c: "RANGO", d: "Valores Normales Hb/Hto", t: "12,5-17 gr/dl | 38-52%", i: "Límites según normativa.", cat: "nodifiere" },
+        // MEDICAMENTOS (MD)
+        { c: "MD (P)", d: "Insulina / Digoxina / Anticoagulantes", t: "Permanente", i: "Incluye quimioterapia, antipsicóticos, anticonvulsivantes y etretinato.", cat: "permanente" },
+        { c: "MD (T)", d: "Acitretina (Neotigason)", t: "3 Años", i: "Diferimiento por tratamiento dermatológico.", cat: "transitorio" },
+        { c: "MD (T)", d: "Antibióticos", t: "7 Días", i: "Excepto tetraciclina, doxiciclina y eritromicina que no difieren.", cat: "transitorio" },
+        { c: "MD (T)", d: "Finasteride / Isotretinoína (Roacutan)", t: "1 Mes", i: "Diferimiento transitorio de 1 mes.", cat: "transitorio" },
 
-        // OTROS (OT)
-        { c: "OT6", d: "Yeso / Inmovilización", t: "15 Días", i: "Luego de retirado el yeso.", cat: "transitorio" },
-        { c: "OT11", d: "Escaso Volumen", t: "1 Día", i: "Falla técnica. Puede reintentar mañana.", cat: "transitorio" }
-    ];
-
-    const input = document.getElementById('searchInput');
-    const container = document.getElementById('resultsList');
-
-    function buscar() {
-        const b = input.value.toLowerCase().trim();
-        container.innerHTML = '';
-        if(!b) return;
-        const f = db.filter(i => i.d.toLowerCase().includes(b) || i.c.toLowerCase().includes(b) || i.i.toLowerCase().includes(b));
-        f.forEach(i => {
-            const card = document.createElement('div');
-            card.className = `item-card ${i.cat}`;
-            card.innerHTML = `<div class="header-item"><span class="code-label">${i.c}</span><span class="time-badge">${i.t}</span></div><span class="title-item">${i.d}</span><div class="info-detallada">${i.i}</div>`;
-            container.appendChild(card);
-        });
-    }
-    input.addEventListener('input', buscar);
-</script>
-</body>
-</html>
+        // VACUNAS (VC)
+        { c: "VC2", d: "Sabin (Oral) / Triple Viral / BCG", t: "4 Semanas", i: "Virus/bacterias vivas atenuadas: Polio oral (Sabin), BCG, Fiebre Amarilla, Sarampión, Rubéola, Varicela, Rotavirus.", cat: "transitorio" },
+        { c: "VC3", d: "Salk (Inyectable) / Gripe / COVID / Tétanos", t: "No difiere", i: "Virus inactivados o recombinantes: Polio inyectable (Salk), dT, DTPa, Influenza, HPV, Hep A/B (sin exposición).", cat: "nodifiere" },
