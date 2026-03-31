@@ -24,8 +24,7 @@
         .search-box { width: 100%; padding: 15px 15px 15px 45px; font-size: 1.1rem; border: 2px solid var(--primary); border-radius: 15px; box-sizing: border-box; outline: none; background: #fff; }
         .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--primary); }
         
-        #resultsList { min-height: 50px; }
-        .item-card { padding: 15px; background: #fff; border-radius: 12px; margin-bottom: 12px; border: 1px solid #edf2f7; border-left: 8px solid #cbd5e1; animation: fadeIn 0.3s; }
+        .item-card { padding: 15px; background: #fff; border-radius: 12px; margin-bottom: 12px; border: 1px solid #edf2f7; border-left: 8px solid #cbd5e1; animation: fadeIn 0.2s ease-in; }
         .item-card.permanente { border-left-color: var(--accent); }
         .item-card.transitorio { border-left-color: var(--warning); }
         .item-card.nodifiere { border-left-color: var(--success); }
@@ -40,7 +39,7 @@
         .btn-calc { background: var(--primary); color: white; border: none; padding: 10px; border-radius: 10px; cursor: pointer; font-weight: bold; height: 45px; }
         #resultado-calc { margin-top: 15px; padding: 12px; border-radius: 10px; display: none; text-align: center; border: 1px solid #bae6fd; }
         
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @media (max-width: 600px) { .grid-calc { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -50,14 +49,14 @@
     <header>
         <img src="logo-balestrini.jpg" alt="Hospital Balestrini" class="logo">
         <h1 style="font-size: 1.2rem; margin: 10px 0 0;">Criterios de Donación 2025</h1>
-        <p style="font-size: 0.8rem; color: #64748b;">Manual Técnico | Hospital Balestrini</p>
+        <p style="font-size: 0.8rem; color: #64748b;">Actualizado con Ley 22.990 y Resumen Técnico</p>
     </header>
 
     <div class="card-main">
         <h2><i class="fa-solid fa-magnifying-glass"></i> Buscador de Diferimientos</h2>
         <div class="search-container">
             <i class="fa-solid fa-search search-icon"></i>
-            <input type="text" id="searchInput" class="search-box" placeholder="Ej: Sabin, Stent, TBC, PREP, Hemo...">
+            <input type="text" id="searchInput" class="search-box" placeholder="Ej: Pulso, Endoscopía, Epilepsia, TBC..." autocomplete="off">
         </div>
         <div id="resultsList"></div>
     </div>
@@ -77,28 +76,42 @@
         </div>
         <div id="resultado-calc"></div>
     </div>
-
-    <footer style="text-align: center; padding: 20px; font-size: 0.8rem; color: #94a3b8;">
-        Basado en Normativa 2025 y Planilla HEMO 2
-    </footer>
 </div>
 
 <script>
-    // BASE DE DATOS ACTUALIZADA CON TU RESUMEN PDF
     const db = [
-        { c: "VC2", d: "Sabin (Oral) / Triple Viral / BCG", t: "4 Semanas", i: "Vacunas a virus/bacterias vivas atenuadas: Polio oral (Sabin), Sarampión, Rubéola, Paperas, Fiebre Amarilla, Varicela.", cat: "transitorio" },
-        { c: "VC3", d: "Salk (Inyectable) / Gripe / COVID / Tétanos", t: "No difiere", i: "Virus inactivados o recombinantes: Polio inyectable, Influenza, HPV, Hepatitis B (sin exposición). Apto si está asintomático.", cat: "nodifiere" },
-        { c: "PREP / PEP", d: "Profilaxis VIH (Pre/Post Exposición)", t: "6 Meses / 2 Años", i: "Vía oral: 6 meses tras última dosis.\nInyectable (Cabotegravir): 2 años tras última dosis.", cat: "transitorio" },
-        { c: "CV9", d: "Stent / Cateterismo / Angioplastia", t: "6 Meses", i: "Procedimientos invasivos cardiovasculares y estudios hemodinámicos.", cat: "transitorio" },
-        { c: "IN7 / IN8", d: "Tuberculosis (TBC) / Osteomielitis", t: "2 Años", i: "Diferimiento desde la curación definitiva de TBC u Osteomielitis crónica.", cat: "transitorio" },
-        { c: "HE7", d: "Hemoglobina Baja (Hb < 12,5)", t: "6 Meses", i: "Conducta técnica: Diferir y derivar para estudio clínico.", cat: "transitorio" },
-        { c: "RANGO", d: "Hemoglobina / Hematocrito (Normal)", t: "12,5-17 g/dl", i: "Hb Mínima: 12,5 g/dl. Hematocrito: 38% a 52%.", cat: "nodifiere" },
-        { c: "IN14", d: "Mononucleosis Infecciosa", t: "6 Meses", i: "Desde el alta médica definitiva.", cat: "transitorio" },
-        { c: "DR7", d: "Tatuajes / Piercings / Acupuntura", t: "1 Año / 6 Meses", i: "12 meses (estándar). 6 meses si se utilizó técnica NAT.", cat: "transitorio" },
-        { c: "OT11", d: "Aguja Tapada / Escaso Volumen", t: "1 Día", i: "Códigos OT7, OT8, OT10. Puede reintentar al día siguiente.", cat: "transitorio" },
-        { c: "MD (T)", d: "Antibióticos", t: "7 Días", i: "Luego de finalizar el tratamiento. Tetraciclinas/Doxiciclina: No difieren.", cat: "transitorio" },
-        { c: "MD (P)", d: "Insulina / Digoxina / Anticoagulantes", t: "Permanente", i: "Uso crónico de medicación inhabilitante por patología base.", cat: "permanente" },
-        { c: "QX10", d: "Endoscopía / Colonoscopía", t: "6 Meses", i: "Estudios con instrumental flexible con resultado normal (Código GE10).", cat: "transitorio" }
+        // --- PARÁMETROS FÍSICOS ---
+        { c: "VALOR", d: "Pulso (Frecuencia Cardíaca)", t: "50 - 100 lpm", i: "Debe ser regular. Menor a 50 en deportistas requiere evaluación médica.", cat: "nodifiere" },
+        { c: "VALOR", d: "Tensión Arterial (TA)", t: "100-170 / 60-100 mmHg", i: "Sistólica: 100-170. Diastólica: 60-100.\nCódigo CV10: Diferimiento de 1 mes por HTA.", cat: "nodifiere" },
+        { c: "VALOR", d: "Peso Mínimo", t: "50 kg", i: "El donante debe pesar al menos 50 kg para ser apto.", cat: "nodifiere" },
+
+        // --- GASTROENTEROLOGÍA (GE) ---
+        { c: "GE10 / QX10", d: "Endoscopía / Colonoscopía / VCC / VEDA", t: "6 Meses", i: "Procedimientos con instrumental flexible con resultado normal.", cat: "transitorio" },
+        { c: "GE2", d: "Cirrosis Hepática", t: "Permanente", i: "Inhabilitación definitiva por patología hepática grave.", cat: "permanente" },
+
+        // --- SISTEMA NERVIOSO (SN) ---
+        { c: "SN2 / SN4", d: "Epilepsia / ACV / Ictus", t: "Permanente", i: "Epilepsia en tratamiento o antecedentes de eventos cerebrovasculares.", cat: "permanente" },
+        { c: "SN5", d: "Guillain-Barré", t: "2 Años", i: "Diferimiento tras estar asintomático.", cat: "transitorio" },
+        { c: "SN6", d: "TEC (Traumatismo Encéfalo Craneano)", t: "1 Mes", i: "Con pérdida de conocimiento pero sin secuelas.", cat: "transitorio" },
+
+        // --- NEFROLOGÍA Y UROLOGÍA (NU) ---
+        { c: "NU1 / NU2", d: "Insuficiencia Renal Crónica (IRC)", t: "Permanente", i: "Incluye tumores malignos urinarios.", cat: "permanente" },
+        { c: "NU3", d: "Procedimientos Urológicos Invasivos", t: "6 Meses", i: "Estudios endoscópicos urológicos.", cat: "transitorio" },
+
+        // --- ALERGIAS (AL) ---
+        { c: "AL1", d: "Alergia Grave / Anafilaxia", t: "Permanente", i: "Antecedentes de shock anafiláctico por cualquier causa.", cat: "permanente" },
+        { c: "AL2", d: "Alergia Estacional / Rinitis", t: "No difiere", i: "Apto si se encuentra asintomático al momento de la donación.", cat: "nodifiere" },
+
+        // --- VACUNAS Y MEDICAMENTOS ---
+        { c: "VC2", d: "Sabin (Oral) / Triple Viral / BCG", t: "4 Semanas", i: "Vacunas a virus/bacterias vivas: Sabin oral, Sarampión, Fiebre Amarilla.", cat: "transitorio" },
+        { c: "VC3", d: "Salk (Inyectable) / Gripe / COVID / Tétanos", t: "No difiere", i: "Virus inactivados. Apto si está asintomático.", cat: "nodifiere" },
+        { c: "PREP / PEP", d: "Profilaxis VIH (Pre/Post Exposición)", t: "6 Meses / 2 Años", i: "Oral: 6 meses. Inyectable (Cabotegravir): 2 años.", cat: "transitorio" },
+
+        // --- OTROS DIFERIMIENTOS ---
+        { c: "CV9", d: "Stent / Cateterismo / Angioplastia", t: "6 Meses", i: "Procedimientos invasivos cardiovasculares.", cat: "transitorio" },
+        { c: "IN7 / IN8", d: "Tuberculosis (TBC) / Osteomielitis", t: "2 Años", i: "Desde la curación definitiva.", cat: "transitorio" },
+        { c: "HE7", d: "Hemoglobina Baja (Anemia)", t: "6 Meses", i: "Si Hb < 12,5 g/dl. Diferir y derivar.", cat: "transitorio" },
+        { c: "OT11", d: "Aguja Tapada / Escaso Volumen", t: "1 Día", i: "Códigos OT7, OT8, OT10. Reintentar mañana.", cat: "transitorio" }
     ];
 
     const input = document.getElementById('searchInput');
@@ -106,9 +119,8 @@
 
     function buscar() {
         const val = input.value.toLowerCase().trim();
-        container.innerHTML = ''; // Limpiar resultados previos
-        
-        if (val.length < 2) return; // Empezar a buscar desde 2 letras
+        container.innerHTML = ''; 
+        if (val.length < 1) return;
 
         const filtrados = db.filter(i => 
             i.d.toLowerCase().includes(val) || 
