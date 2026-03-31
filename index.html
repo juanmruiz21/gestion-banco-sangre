@@ -10,21 +10,25 @@
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--dark); margin: 0; padding: 0; }
         .container { max-width: 850px; margin: 0 auto; padding: 20px; }
         header { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; margin-bottom: 20px; border-bottom: 5px solid var(--primary); }
-        .logo { max-width: 220px; height: auto; }
+        .logo { max-width: 200px; height: auto; }
         .card-main { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        h2 { color: var(--primary); font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 0; }
-        .search-box { width: 100%; padding: 15px 15px 15px 45px; font-size: 1rem; border: 2px solid #e2e8f0; border-radius: 12px; box-sizing: border-box; outline: none; }
+        h2 { color: var(--primary); font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 0; display: flex; align-items: center; gap: 8px; }
+        .search-box { width: 100%; padding: 15px 15px 15px 45px; font-size: 1.1rem; border: 2px solid var(--primary); border-radius: 15px; box-sizing: border-box; outline: none; }
         .search-container { position: relative; }
-        .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
-        .item-card { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: #fff; border-radius: 10px; margin-bottom: 8px; border: 1px solid #edf2f7; border-left: 5px solid #cbd5e1; font-size: 0.9rem; }
-        .item-card.permanente { border-left-color: #ef4444; background: #fff5f5; }
-        .item-card.transitorio { border-left-color: #f59e0b; background: #fffbeb; }
-        .item-card.nodifiere { border-left-color: #10b981; background: #f0fdf4; }
-        .time-badge { background: var(--dark); color: white; padding: 3px 10px; border-radius: 50px; font-size: 0.75rem; font-weight: bold; white-space: nowrap; margin-left: 10px; }
-        .code-label { font-family: monospace; font-weight: bold; color: #64748b; font-size: 0.7rem; display: block; }
+        .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--primary); }
+        .item-card { padding: 18px; background: #fff; border-radius: 12px; margin-bottom: 12px; border: 1px solid #edf2f7; border-left: 8px solid #cbd5e1; }
+        .item-card.permanente { border-left-color: #ef4444; }
+        .item-card.transitorio { border-left-color: #f59e0b; }
+        .item-card.nodifiere { border-left-color: #10b981; }
+        .header-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .code-label { font-family: monospace; font-weight: bold; color: #64748b; font-size: 0.8rem; }
+        .time-badge { background: var(--dark); color: white; padding: 4px 12px; border-radius: 50px; font-size: 0.85rem; font-weight: bold; }
+        .title-item { font-size: 1.1rem; font-weight: 700; color: #1e293b; margin-bottom: 5px; display: block; }
+        .info-detallada { font-size: 0.95rem; line-height: 1.5; color: #475569; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px dashed #cbd5e1; }
         .grid-calc { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end; }
-        .btn-calc { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; height: 45px; }
-        #resultado-calc { margin-top: 15px; padding: 12px; border-radius: 10px; display: none; text-align: center; font-size: 0.9rem; }
+        .btn-calc { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; height: 48px; }
+        #resultado-calc { margin-top: 15px; padding: 15px; border-radius: 12px; display: none; text-align: center; border: 1px solid #bae6fd; font-weight: 600; }
+        footer { text-align: center; font-size: 0.8rem; color: #94a3b8; padding: 20px; }
         @media (max-width: 600px) { .grid-calc { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -32,35 +36,40 @@
 
 <div class="container">
     <header>
-        <img src="logo-balestrini.jpg" alt="Logo Hospital" class="logo">
-        <h1 style="font-size: 1.3rem; margin: 10px 0 0;">SERVICIO DE HEMOTERAPIA</h1>
-        <p style="font-size: 0.8rem; color: #64748b; margin: 5px 0;">Calculador y Buscador Técnico (Normativa PBA 2025)</p>
+        <img src="logo-balestrini.jpg" alt="Logo Hospital Balestrini" class="logo">
+        <h1 style="font-size: 1.3rem; margin: 10px 0 0;">CONSULTA TÉCNICA HEMOTERAPIA</h1>
+        <p style="font-size: 0.85rem; color: #64748b; margin: 5px 0;">Referencia: NO-2025-30567861 (PBA)</p>
     </header>
 
     <div class="card-main">
-        <h2><i class="fa-solid fa-calendar-day"></i> Frecuencia de Donación</h2>
+        <h2><i class="fa-solid fa-magnifying-glass"></i> Buscador de Criterios (Información Completa)</h2>
+        <div class="search-container">
+            <i class="fa-solid fa-search search-icon"></i>
+            <input type="text" id="searchInput" class="search-box" placeholder="Hematocrito, Presión, OT2, Psoriasis, Aspirina...">
+        </div>
+        <div id="results" style="margin-top: 20px;"></div>
+    </div>
+
+    <div class="card-main">
+        <h2><i class="fa-solid fa-calendar-plus"></i> Calculador de Intervalos</h2>
         <div class="grid-calc">
-            <div><label style="font-size: 0.75rem;">Última donación:</label><input type="date" id="fechaUltima"></div>
-            <div><label style="font-size: 0.75rem;">Donante:</label>
+            <div><label style="font-size: 0.8rem; font-weight: bold;">Última donación:</label><input type="date" id="fechaUltima"></div>
+            <div><label style="font-size: 0.8rem; font-weight: bold;">Frecuencia:</label>
                 <select id="tipoDonante">
-                    <option value="8">Masculino (8 semanas)</option>
-                    <option value="12">Femenino (12 semanas)</option>
+                    <option value="8">Hombre (8 semanas)</option>
+                    <option value="12">Mujer (12 semanas)</option>
                     <option value="26">Menor 16-18 años (6 meses)</option>
                 </select>
             </div>
-            <button class="btn-calc" onclick="calcular()">CALCULAR</button>
+            <button class="btn-calc" onclick="calcular()">CALCULAR FECHA</button>
         </div>
         <div id="resultado-calc"></div>
     </div>
 
-    <div class="card-main">
-        <h2><i class="fa-solid fa-magnifying-glass"></i> Buscador de Diferimientos</h2>
-        <div class="search-container">
-            <i class="fa-solid fa-search search-icon"></i>
-            <input type="text" id="searchInput" class="search-box" placeholder="Ej: Psoriasis, Endoscopía, Aspirina, Tatuaje...">
-        </div>
-        <div id="results" style="margin-top: 15px;"></div>
-    </div>
+    <footer>
+        Hospital Balestrini - Servicio de Hemoterapia<br>
+        Provincia de Buenos Aires
+    </footer>
 </div>
 
 <script>
@@ -72,63 +81,17 @@
         let d = new Date(f);
         d.setDate(d.getDate() + (s * 7));
         r.style.display = 'block';
-        r.style.background = '#e0f2fe';
+        r.style.background = '#f0f9ff';
         r.innerHTML = `Próxima fecha apta: <strong>${d.toLocaleDateString('es-AR', {dateStyle:'full'})}</strong>`;
     }
 
-    // BASE DE DATOS TÉCNICA COMPLETA (Extraída de NO-2025-30567861)
     const db = [
-        // MEDICAMENTOS Y PATOLOGÍAS (MD e IN)
-        { c: "MD1", d: "Psoriasis (si usa metotrexato, acitretina o biológicos)", t: "Permanente", cat: "permanente" },
-        { c: "MD1", d: "Insulina / Digoxina / Anticoagulantes / Antipsicóticos / Quimioterapia", t: "Permanente", cat: "permanente" },
-        { c: "MD4", d: "Dutasteride (Avodart)", t: "6 Meses", cat: "transitorio" },
-        { c: "MD3", d: "Finasteride (Propecia)", t: "1 Mes", cat: "transitorio" },
-        { c: "MD6", d: "Antibióticos (luego de finalizar el tratamiento)", t: "7 Días", cat: "transitorio" },
-        { c: "MD", d: "Aspirina / Analgésicos menores / Anticonceptivos / Vitaminas", t: "Sin Diferimiento", cat: "nodifiere" },
-        { c: "MD", d: "Corticoides vía oral (terminado el tratamiento)", t: "Sin Diferimiento", cat: "nodifiere" },
-        
-        // INFECTOLOGÍA (IN)
-        { c: "IN21", d: "Dengue (Días posteriores al alta médica)", t: "1 Mes", cat: "transitorio" },
-        { c: "IN3", d: "Chagas / Sífilis / VIH / Hepatitis B / Hepatitis C / HTLV", t: "Permanente", cat: "permanente" },
-        { c: "IN4", d: "Brucelosis (luego del alta)", t: "2 Años", cat: "transitorio" },
-        { c: "IN11", d: "Mononucleosis (luego del alta)", t: "6 Meses", cat: "transitorio" },
-        
-        // CIRUGÍAS Y PROCEDIMIENTOS (QX y DR)
-        { c: "DR7", d: "Tatuajes / Maquillaje Permanente / Acupuntura", t: "1 Año", cat: "transitorio" },
-        { c: "DR8", d: "Piercing / Tatuaje realizado con material propio", t: "6 Meses", cat: "transitorio" },
-        { c: "QX10", d: "Endoscopía / Colonoscopía / Laparoscopía", t: "6 Meses", cat: "transitorio" },
-        { c: "QX11", d: "Cirugía Menor sin transfusiones (con alta médica)", t: "6 Meses", cat: "transitorio" },
-        { c: "QX14", d: "Extracción Dental Simple (sin infección)", t: "3 Días", cat: "transitorio" },
-        { c: "QX13", d: "Cirugía Odontológica con ATB (luego de suspender)", t: "15 Días", cat: "transitorio" },
-        
-        // VACUNAS (VC)
-        { c: "VC", d: "Vacuna Antigripal / Salk / Hepatitis A/B / HPV / Tétanos / Difteria", t: "Sin Diferimiento", cat: "nodifiere" },
-        { c: "VC2", d: "Vacuna Sabin oral / Triple Viral / Sarampión / Rubéola / Varicela", t: "1 Mes", cat: "transitorio" },
-        
-        // OTROS (OT)
-        { c: "OT4", d: "Fracturas sin tratamiento quirúrgico", t: "1 Mes", cat: "transitorio" },
-        { c: "OT6", d: "Yeso (luego de retirado)", t: "15 Días", cat: "transitorio" },
-        { c: "HE7", d: "Hemoglobina baja (Anemia < 12,5 g/dl)", t: "6 Meses / Derivar", cat: "transitorio" },
-        { c: "GO4", d: "Embarazo / Parto / Cesárea / Aborto (sin transfusiones)", t: "6 Meses", cat: "transitorio" }
-    ];
+        // RANGOS CLÍNICOS (PAG 3)
+        { c: "RANGO", d: "Hematocrito / Hemoglobina", t: "≥ 38% / ≥ 12,5 g/dl", i: "Valor mínimo para la donación. Diferimiento de 6 meses (HE7) si es menor. Se recomienda derivación médica.", cat: "nodifiere" },
+        { c: "RANGO", d: "Tensión Arterial (Presión)", t: "Máx 160/100 | Mín 90/60", i: "Sistólica: entre 90 y 160 mmHg. Diastólica: entre 60 y 100 mmHg. Si está medicado y controlado, puede donar.", cat: "nodifiere" },
+        { c: "RANGO", d: "Frecuencia Cardíaca (Pulso)", t: "60 - 100 lpm", i: "Debe ser regular. Si presenta arritmias o valores fuera de rango, diferir según criterio médico.", cat: "nodifiere" },
+        { c: "EDAD", d: "Donantes 16 a 65 años", t: "Ver excepciones", i: "16-18 años: Con autorización y cada 6 meses. Mayores de 65: Con certificado médico anual y última donación en los últimos 2 años.", cat: "transitorio" },
 
-    const input = document.getElementById('searchInput');
-    const res = document.getElementById('results');
-
-    function buscar() {
-        const v = input.value.toLowerCase().trim();
-        res.innerHTML = '';
-        if(!v) return;
-        const filtrados = db.filter(i => i.d.toLowerCase().includes(v) || i.c.toLowerCase().includes(v));
-        
-        filtrados.forEach(i => {
-            const div = document.createElement('div');
-            div.className = `item-card ${i.cat}`;
-            div.innerHTML = `<div><span class="code-label">${i.c}</span><strong>${i.d}</strong></div><div class="time-badge">${i.t}</div>`;
-            res.appendChild(div);
-        });
-    }
-    input.addEventListener('input', buscar);
-</script>
-</body>
-</html>
+        // MEDICAMENTOS E INFECTO (PAG 11-15)
+        { c: "MD1", d: "Psoriasis (Tratamiento Sistémico)", t: "Permanente", i: "Si usa Metotrexato, Acitretina o medicamentos biológicos, el diferimiento es PERMANENTE según anexo. Si es local/tópico leve, consultar médico.", cat: "permanente" },
+        { c: "MD", d: "Aspirina / AINES / Analgésicos", t: "Sin Diferimiento", i: "Si el donante está asintom
