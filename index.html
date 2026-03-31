@@ -8,13 +8,13 @@
     <style>
         :root { --primary: #0099cc; --accent: #e11d48; --bg: #f4f7f9; --dark: #1e293b; --success: #10b981; --warning: #f59e0b; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--dark); margin: 0; padding: 0; }
-        .container { max-width: 900px; margin: 0 auto; padding: 15px; }
+        .container { max-width: 850px; margin: 0 auto; padding: 15px; }
         header { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; margin-bottom: 20px; border-bottom: 5px solid var(--primary); }
         .logo { max-width: 180px; height: auto; }
         .card-main { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; }
         h2 { color: var(--primary); font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 0; display: flex; align-items: center; gap: 8px; }
-        .search-container { position: relative; margin-bottom: 15px; }
         .search-box { width: 100%; padding: 15px 15px 15px 45px; font-size: 1.1rem; border: 2px solid var(--primary); border-radius: 15px; box-sizing: border-box; outline: none; }
+        .search-container { position: relative; margin-bottom: 15px; }
         .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--primary); }
         .item-card { padding: 15px; background: #fff; border-radius: 12px; margin-bottom: 12px; border: 1px solid #edf2f7; border-left: 8px solid #cbd5e1; }
         .item-card.permanente { border-left-color: var(--accent); }
@@ -27,8 +27,7 @@
         .info-detallada { font-size: 0.9rem; line-height: 1.4; color: #475569; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px dashed #cbd5e1; white-space: pre-line; }
         .grid-calc { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end; }
         .btn-calc { background: var(--primary); color: white; border: none; padding: 10px; border-radius: 10px; cursor: pointer; font-weight: bold; height: 45px; }
-        #resultado-calc { margin-top: 15px; padding: 12px; border-radius: 10px; display: none; text-align: center; font-size: 0.95rem; border: 1px solid #bae6fd; }
-        footer { text-align: center; padding: 20px; font-size: 0.8rem; color: #94a3b8; }
+        #resultado-calc { margin-top: 15px; padding: 12px; border-radius: 10px; display: none; text-align: center; border: 1px solid #bae6fd; }
     </style>
 </head>
 <body>
@@ -37,23 +36,23 @@
     <header>
         <img src="logo-balestrini.jpg" alt="Logo Balestrini" class="logo">
         <h1 style="font-size: 1.2rem; margin: 10px 0 0;">HEMOTERAPIA OPERATIVA (PBA)</h1>
-        <p style="font-size: 0.8rem; color: #64748b; margin: 4px 0;">Referencia: NO-2025-30567861-GDEBA</p>
+        <p style="font-size: 0.8rem; color: #64748b;">Referencia: NO-2025-30567861 | Apartado Vacunas</p>
     </header>
 
     <div class="card-main">
-        <h2><i class="fa-solid fa-magnifying-glass"></i> Buscador Técnico</h2>
+        <h2><i class="fa-solid fa-magnifying-glass"></i> Buscador de Diferimientos</h2>
         <div class="search-container">
             <i class="fa-solid fa-search search-icon"></i>
-            <input type="text" id="searchInput" class="search-box" placeholder="Ej: Hemoglobina, TBC, CV2, OT1, Psoriasis...">
+            <input type="text" id="searchInput" class="search-box" placeholder="Ej: Sabin, Gripe, Rabia, Stent, TBC...">
         </div>
         <div id="resultsList"></div>
     </div>
 
     <div class="card-main">
-        <h2><i class="fa-solid fa-calendar-check"></i> Próxima Donación</h2>
+        <h2><i class="fa-solid fa-calendar-check"></i> Calculador de Intervalos</h2>
         <div class="grid-calc">
             <div><label style="font-size: 0.75rem;">Última donación:</label><input type="date" id="fechaUltima" style="width:100%; padding:8px; border-radius:8px; border:1px solid #ccc;"></div>
-            <div><label style="font-size: 0.75rem;">Criterio:</label>
+            <div><label style="font-size: 0.75rem;">Donante:</label>
                 <select id="tipoDonante" style="width:100%; padding:8px; border-radius:8px; border:1px solid #ccc;">
                     <option value="8">Masculino (8 semanas)</option>
                     <option value="12">Femenino (12 semanas)</option>
@@ -64,8 +63,6 @@
         </div>
         <div id="resultado-calc"></div>
     </div>
-
-    <footer>Hospital Balestrini - Servicio de Hemoterapia</footer>
 </div>
 
 <script>
@@ -75,39 +72,32 @@
         const r = document.getElementById('resultado-calc');
         if(!f) return;
         let d = new Date(f);
-        d.setDate(d.getDate() + (s * 7));
+        d.setDate(d.getDate() + (s * 7 + 1));
         r.style.display = 'block';
         r.style.background = '#f0f9ff';
-        r.innerHTML = `Próxima fecha apta: <strong>${d.toLocaleDateString('es-AR', {dateStyle:'full'})}</strong>`;
+        r.innerHTML = `Apto para nueva extracción el: <strong>${d.toLocaleDateString('es-AR', {dateStyle:'full'})}</strong>`;
     }
 
     const db = [
-        // PARÁMETROS CLÍNICOS
-        { c: "RANGO", d: "Hemoglobina / Hematocrito", t: "12,5-17 gr/dl / 38-52%", i: "Mínimo 12,5 gr/dl de Hemoglobina y 38% de Hematocrito.\nHE7: Si es menor, diferir 6 meses y derivar para estudio.", cat: "nodifiere" },
-        { c: "RANGO", d: "Tensión Arterial", t: "100-170 / 60-100 mmHg", i: "Sistólica: 100-170. Diastólica: 60-100. Valores fuera de rango requieren evaluación médica.", cat: "nodifiere" },
+        // VACUNAS (VC) - SEGÚN PDF 2025
+        { c: "VC1", d: "Vacuna Antirrábica (Mordedura)", t: "1 Año", i: "Diferimiento de 12 meses si hubo mordedura o exposición de riesgo.\nSi fue profiláctica (sin mordedura): No difiere.", cat: "transitorio" },
+        { c: "VC2", d: "Vacuna Sabin / BCG / Fiebre Amarilla / Sarampión", t: "4 Semanas", i: "Vacunas a virus vivos atenuados o bacterias vivas: Sabin oral, BCG, Fiebre Amarilla, Sarampión, Rubéola, Paperas (MMR), Varicela y Fiebre Tifoidea oral.", cat: "transitorio" },
+        { c: "VC3", d: "Vacuna Gripe / COVID / Tétanos / Hepatitis A-B", t: "No difiere", i: "Vacunas con virus/bacterias muertas o inactivadas: Gripe, Neumococo, Tétanos, Difteria, Pertussis, Hepatitis A y B, Meningococo, VPH y Salk (IPV). Siempre que el donante esté asintomático.", cat: "nodifiere" },
+        { c: "VC4", d: "Gammaglobulinas (Post-exposición)", t: "1 Año", i: "Administración por exposición a Hepatitis B, Rabia o Tétanos.", cat: "transitorio" },
+
+        // CARDIO (CV)
+        { c: "CV9", d: "Stent / Cateterismo / Angioplastia", t: "6 Meses", i: "Diferimiento por estudios hemodinámicos y procedimientos invasivos cardiovasculares.", cat: "transitorio" },
         
-        // INFECTOLOGÍA (IN)
-        { c: "IN7", d: "Tuberculosis (TBC)", t: "2 Años", i: "Diferimiento de 2 años después de la curación definitiva.", cat: "transitorio" },
-        { c: "IN21", d: "Dengue", t: "1 Mes", i: "1 mes desde el alta médica. Si fue Dengue Hemorrágico (IN15): 4 meses.", cat: "transitorio" },
-        { c: "IN3", d: "VIH / Hepatitis B-C / Sífilis / Chagas", t: "Permanente", i: "Infecciones confirmadas o antecedentes positivos.", cat: "permanente" },
+        // INFECTO (IN)
+        { c: "IN7", d: "Tuberculosis (TBC)", t: "2 Años", i: "Diferimiento tras la curación definitiva.", cat: "transitorio" },
+        
+        // VALORES CLÍNICOS
+        { c: "HE7", d: "Hemoglobina Baja (Anemia)", t: "6 Meses", i: "Si la Hb es < 12,5 gr/dl. Derivar para estudio.", cat: "transitorio" },
+        { c: "RANGO", d: "Valores Normales Hb/Hto", t: "12,5-17 gr/dl | 38-52%", i: "Límites según normativa.", cat: "nodifiere" },
 
-        // CARDIOLOGÍA (CV)
-        { c: "CV1", d: "Infarto / Coronariopatías", t: "Permanente", i: "Diferimiento por seguridad del donante.", cat: "permanente" },
-        { c: "CV9", d: "Cateterismo / Angioplastia", t: "6 Meses", i: "Diferimiento por procedimiento invasivo.", cat: "transitorio" },
-
-        // DERMATOLOGÍA (DR)
-        { c: "DR11", d: "Psoriasis", t: "6 Meses / Permanente", i: "6 meses tras brote leve. Permanente (MD1) si usa medicación biológica.", cat: "transitorio" },
-        { c: "DR7", d: "Tatuajes / Piercings / Acupuntura", t: "1 Año / 6 Meses", i: "12 meses estándar. 6 meses si el centro usa técnica NAT.", cat: "transitorio" },
-
-        // MEDICAMENTOS (MD)
-        { c: "MD1", d: "Medicación Crónica (Insulina, Digoxina, Anticoagulantes)", t: "Permanente", i: "Ver anexo para drogas específicas de quimioterapia o psiquiatría.", cat: "permanente" },
-        { c: "MD3", d: "Finasteride (Propecia)", t: "1 Mes", i: "Diferimiento por potencial teratogénico.", cat: "transitorio" },
-        { c: "MD4", d: "Dutasteride (Avodart)", t: "6 Meses", i: "Diferimiento por vida media de la droga.", cat: "transitorio" },
-
-        // TABLA OTROS (OT)
-        { c: "OT2", d: "Accidente Punzocortante", t: "1 Año", i: "Pinchazo accidental con material de riesgo.", cat: "transitorio" },
-        { c: "OT6", d: "Yeso (Inmovilización)", t: "15 Días", i: "A partir de la fecha en que se retira el yeso.", cat: "transitorio" },
-        { c: "OT11", d: "Escaso Volumen / Aguja Tapada", t: "1 Día", i: "Puede reintentar al día siguiente si su Hb lo permite.", cat: "transitorio" }
+        // OTROS (OT)
+        { c: "OT6", d: "Yeso / Inmovilización", t: "15 Días", i: "Luego de retirado el yeso.", cat: "transitorio" },
+        { c: "OT11", d: "Escaso Volumen", t: "1 Día", i: "Falla técnica. Puede reintentar mañana.", cat: "transitorio" }
     ];
 
     const input = document.getElementById('searchInput');
