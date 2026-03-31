@@ -4,69 +4,133 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hemoterapia | Hospital Balestrini</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🩸</text></svg>">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <style>
         :root { --primary: #0099cc; --accent: #e11d48; --bg: #f4f7f9; --dark: #1e293b; --success: #10b981; --warning: #f59e0b; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--dark); margin: 0; padding: 0; }
-        .container { max-width: 850px; margin: 0 auto; padding: 15px; }
+        .container { max-width: 800px; margin: 0 auto; padding: 15px; }
+        
         header { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; margin-bottom: 20px; border-bottom: 5px solid var(--primary); }
-        .logo { max-width: 180px; height: auto; }
+        .logo { max-width: 160px; height: auto; }
+        
         .card-main { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; }
         h2 { color: var(--primary); font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 0; display: flex; align-items: center; gap: 8px; }
+        
         .search-container { position: relative; margin: 15px 0; }
         .search-box { width: 100%; padding: 15px 15px 15px 45px; font-size: 1.1rem; border: 2px solid var(--primary); border-radius: 15px; box-sizing: border-box; outline: none; background: #fff; }
         .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--primary); }
-        .item-card { padding: 15px; background: #fff; border-radius: 12px; margin-bottom: 12px; border: 1px solid #edf2f7; border-left: 8px solid #cbd5e1; display: block; animation: fadeIn 0.3s; }
+        
+        #resultsList { min-height: 50px; }
+        .item-card { padding: 15px; background: #fff; border-radius: 12px; margin-bottom: 12px; border: 1px solid #edf2f7; border-left: 8px solid #cbd5e1; animation: fadeIn 0.3s; }
         .item-card.permanente { border-left-color: var(--accent); }
         .item-card.transitorio { border-left-color: var(--warning); }
         .item-card.nodifiere { border-left-color: var(--success); }
+        
         .header-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
         .code-label { font-family: monospace; font-weight: bold; color: #64748b; font-size: 0.8rem; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; }
         .time-badge { background: var(--dark); color: white; padding: 4px 12px; border-radius: 50px; font-size: 0.8rem; font-weight: bold; }
         .title-item { font-size: 1.1rem; font-weight: 700; color: #1e293b; display: block; margin-bottom: 5px; }
         .info-detallada { font-size: 0.9rem; line-height: 1.4; color: #475569; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px dashed #cbd5e1; white-space: pre-line; }
+
         .grid-calc { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end; }
         .btn-calc { background: var(--primary); color: white; border: none; padding: 10px; border-radius: 10px; cursor: pointer; font-weight: bold; height: 45px; }
         #resultado-calc { margin-top: 15px; padding: 12px; border-radius: 10px; display: none; text-align: center; border: 1px solid #bae6fd; }
+        
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 600px) { .grid-calc { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <img src="logo-balestrini.jpg" alt="Logo Hospital Balestrini" class="logo">
+        <img src="logo-balestrini.jpg" alt="Hospital Balestrini" class="logo">
         <h1 style="font-size: 1.2rem; margin: 10px 0 0;">Criterios de Donación 2025</h1>
-        <p style="font-size: 0.8rem; color: #64748b;">Basado en Planilla HEMO 2 y Ley 22.990</p>
+        <p style="font-size: 0.8rem; color: #64748b;">Manual Técnico | Hospital Balestrini</p>
     </header>
 
     <div class="card-main">
-        <h2><i class="fa-solid fa-magnifying-glass"></i> Buscador Inteligente</h2>
+        <h2><i class="fa-solid fa-magnifying-glass"></i> Buscador de Diferimientos</h2>
         <div class="search-container">
             <i class="fa-solid fa-search search-icon"></i>
-            <input type="text" id="searchInput" class="search-box" placeholder="Ej: Sabin, Stent, Anemia, PREP, TBC...">
+            <input type="text" id="searchInput" class="search-box" placeholder="Ej: Sabin, Stent, TBC, PREP, Hemo...">
         </div>
         <div id="resultsList"></div>
     </div>
 
     <div class="card-main">
-        <h2><i class="fa-solid fa-calendar-check"></i> Calculador de Intervalos</h2>
+        <h2><i class="fa-solid fa-calendar-day"></i> Calculador Próxima Fecha</h2>
         <div class="grid-calc">
-            <div><label style="font-size: 0.75rem;">Última donación:</label><input type="date" id="fechaUltima" style="width:100%; padding:8px; border-radius:8px; border:1px solid #ccc;"></div>
-            <div><label style="font-size: 0.75rem;">Tipo de Donante:</label>
+            <div><label style="font-size: 0.75rem; font-weight: bold;">Última donación:</label><input type="date" id="fechaUltima" style="width:100%; padding:8px; border-radius:8px; border:1px solid #ccc;"></div>
+            <div><label style="font-size: 0.75rem; font-weight: bold;">Donante:</label>
                 <select id="tipoDonante" style="width:100%; padding:8px; border-radius:8px; border:1px solid #ccc;">
-                    <option value="8">Hombre (8 semanas)</option>
-                    <option value="12">Mujer (12 semanas)</option>
-                    <option value="26">Menor 16-18 años (6 meses)</option>
+                    <option value="8">Masculino (8 semanas)</option>
+                    <option value="12">Femenino (12 semanas)</option>
+                    <option value="26">Menores 16-18 (6 meses)</option>
                 </select>
             </div>
             <button class="btn-calc" onclick="calcular()">CALCULAR</button>
         </div>
         <div id="resultado-calc"></div>
     </div>
+
+    <footer style="text-align: center; padding: 20px; font-size: 0.8rem; color: #94a3b8;">
+        Basado en Normativa 2025 y Planilla HEMO 2
+    </footer>
 </div>
 
 <script>
+    // BASE DE DATOS ACTUALIZADA CON TU RESUMEN PDF
+    const db = [
+        { c: "VC2", d: "Sabin (Oral) / Triple Viral / BCG", t: "4 Semanas", i: "Vacunas a virus/bacterias vivas atenuadas: Polio oral (Sabin), Sarampión, Rubéola, Paperas, Fiebre Amarilla, Varicela.", cat: "transitorio" },
+        { c: "VC3", d: "Salk (Inyectable) / Gripe / COVID / Tétanos", t: "No difiere", i: "Virus inactivados o recombinantes: Polio inyectable, Influenza, HPV, Hepatitis B (sin exposición). Apto si está asintomático.", cat: "nodifiere" },
+        { c: "PREP / PEP", d: "Profilaxis VIH (Pre/Post Exposición)", t: "6 Meses / 2 Años", i: "Vía oral: 6 meses tras última dosis.\nInyectable (Cabotegravir): 2 años tras última dosis.", cat: "transitorio" },
+        { c: "CV9", d: "Stent / Cateterismo / Angioplastia", t: "6 Meses", i: "Procedimientos invasivos cardiovasculares y estudios hemodinámicos.", cat: "transitorio" },
+        { c: "IN7 / IN8", d: "Tuberculosis (TBC) / Osteomielitis", t: "2 Años", i: "Diferimiento desde la curación definitiva de TBC u Osteomielitis crónica.", cat: "transitorio" },
+        { c: "HE7", d: "Hemoglobina Baja (Hb < 12,5)", t: "6 Meses", i: "Conducta técnica: Diferir y derivar para estudio clínico.", cat: "transitorio" },
+        { c: "RANGO", d: "Hemoglobina / Hematocrito (Normal)", t: "12,5-17 g/dl", i: "Hb Mínima: 12,5 g/dl. Hematocrito: 38% a 52%.", cat: "nodifiere" },
+        { c: "IN14", d: "Mononucleosis Infecciosa", t: "6 Meses", i: "Desde el alta médica definitiva.", cat: "transitorio" },
+        { c: "DR7", d: "Tatuajes / Piercings / Acupuntura", t: "1 Año / 6 Meses", i: "12 meses (estándar). 6 meses si se utilizó técnica NAT.", cat: "transitorio" },
+        { c: "OT11", d: "Aguja Tapada / Escaso Volumen", t: "1 Día", i: "Códigos OT7, OT8, OT10. Puede reintentar al día siguiente.", cat: "transitorio" },
+        { c: "MD (T)", d: "Antibióticos", t: "7 Días", i: "Luego de finalizar el tratamiento. Tetraciclinas/Doxiciclina: No difieren.", cat: "transitorio" },
+        { c: "MD (P)", d: "Insulina / Digoxina / Anticoagulantes", t: "Permanente", i: "Uso crónico de medicación inhabilitante por patología base.", cat: "permanente" },
+        { c: "QX10", d: "Endoscopía / Colonoscopía", t: "6 Meses", i: "Estudios con instrumental flexible con resultado normal (Código GE10).", cat: "transitorio" }
+    ];
+
+    const input = document.getElementById('searchInput');
+    const container = document.getElementById('resultsList');
+
+    function buscar() {
+        const val = input.value.toLowerCase().trim();
+        container.innerHTML = ''; // Limpiar resultados previos
+        
+        if (val.length < 2) return; // Empezar a buscar desde 2 letras
+
+        const filtrados = db.filter(i => 
+            i.d.toLowerCase().includes(val) || 
+            i.c.toLowerCase().includes(val) || 
+            i.i.toLowerCase().includes(val)
+        );
+
+        filtrados.forEach(i => {
+            const div = document.createElement('div');
+            div.className = `item-card ${i.cat}`;
+            div.innerHTML = `
+                <div class="header-item">
+                    <span class="code-label">${i.c}</span>
+                    <span class="time-badge">${i.t}</span>
+                </div>
+                <strong class="title-item">${i.d}</strong>
+                <div class="info-detallada">${i.i}</div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
     function calcular() {
         const f = document.getElementById('fechaUltima').value;
         const s = document.getElementById('tipoDonante').value;
@@ -76,29 +140,10 @@
         d.setDate(d.getDate() + (s * 7 + 1));
         r.style.display = 'block';
         r.style.background = '#f0f9ff';
-        r.innerHTML = `Próxima fecha apta: <strong>${d.toLocaleDateString('es-AR', {dateStyle:'full'})}</strong>`;
+        r.innerHTML = `Apto desde el: <strong>${d.toLocaleDateString('es-AR', {dateStyle:'full'})}</strong>`;
     }
 
-    const db = [
-        // VACUNAS (VC) - DEL RESUMEN PDF
-        { c: "VC2", d: "Sabin (Polio Oral) / BCG / Triple Viral", t: "4 Semanas", i: "Diferimiento por vacunas de virus/bacterias vivas atenuadas (Sabin oral, Fiebre Amarilla, Sarampión, Rubéola, Varicela).", cat: "transitorio" },
-        { c: "VC3", d: "Salk (Inyectable) / Gripe / COVID / Tétanos", t: "No difiere", i: "Virus inactivados o recombinantes. Apto si el donante está asintomático.", cat: "nodifiere" },
-        { c: "VC1", d: "Vacuna Antirrábica", t: "12 Meses", i: "Si hubo mordedura o exposición. Si fue profiláctica sin mordedura, no difiere.", cat: "transitorio" },
-
-        // CARDIO (CV)
-        { c: "CV9", d: "Stent / Cateterismo / Angioplastia", t: "6 Meses", i: "Procedimientos invasivos cardiovasculares y estudios hemodinámicos.", cat: "transitorio" },
-        { c: "CV1", d: "Infarto / Coronariopatía / ACV", t: "Permanente", i: "Diferimiento definitivo por seguridad del donante (Incluye SN4).", cat: "permanente" },
-
-        // INFECTO Y RIESGO
-        { c: "PREP / PEP", d: "Profilaxis VIH (Pre/Post Exposición)", t: "6 Meses / 2 Años", i: "Vía oral: 6 meses. Inyectable (Cabotegravir): 2 años.", cat: "transitorio" },
-        { c: "IN7 / IN8", d: "Tuberculosis (TBC) / Osteomielitis", t: "2 Años", i: "Diferimiento desde la curación definitiva.", cat: "transitorio" },
-        { c: "IN14", d: "Mononucleosis Infecciosa", t: "6 Meses", i: "Desde el alta médica definitiva.", cat: "transitorio" },
-
-        // PARÁMETROS HEMO 2
-        { c: "HE7", d: "Hemoglobina Baja / Anemia", t: "6 Meses", i: "Si Hb < 12,5 gr/dl. Derivar para estudio y tratamiento.", cat: "transitorio" },
-        { c: "VALOR", d: "Hemoglobina (Rango Normal)", t: "12,5 - 17 gr/dl", i: "Límites para aceptar al donante. Hematocrito: 38% a 52%.", cat: "nodifiere" },
-        
-        // MEDICAMENTOS
-        { c: "MD (T)", d: "Antibióticos", t: "7 Días", i: "Tras finalizar tratamiento. Excepto tetraciclinas (no difieren).", cat: "transitorio" },
-        { c: "MD (T)", d: "Isotretinoína (Roacutan) / Finasteride", t: "1 Mes", i: "Por potencial teratogénico.", cat: "transitorio" },
-        { c: "MD (P)", d: "Insulina / Anticoagulantes / Digoxina", t: "Permanente", i: "Uso crónico de medicación inhabilitante.", cat
+    input.addEventListener('input', buscar);
+</script>
+</body>
+</html>
