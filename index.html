@@ -11,24 +11,24 @@
         .container { max-width: 850px; margin: 0 auto; padding: 15px; }
         header { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; margin-bottom: 20px; border-bottom: 5px solid var(--primary); }
         .logo { max-width: 180px; height: auto; }
-        .card-main { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #eee; }
+        .card-main { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; }
         h2 { color: var(--primary); font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 0; display: flex; align-items: center; gap: 8px; }
-        .search-container { position: relative; margin-bottom: 15px; }
-        .search-box { width: 100%; padding: 15px 15px 15px 45px; font-size: 1.1rem; border: 2px solid var(--primary); border-radius: 15px; box-sizing: border-box; outline: none; transition: 0.3s; }
+        .search-container { position: relative; margin: 15px 0; }
+        .search-box { width: 100%; padding: 15px 15px 15px 45px; font-size: 1.1rem; border: 2px solid var(--primary); border-radius: 15px; box-sizing: border-box; outline: none; background: #fff; }
         .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--primary); }
-        .item-card { padding: 15px; background: #fff; border-radius: 12px; margin-bottom: 12px; border: 1px solid #edf2f7; border-left: 8px solid #cbd5e1; display: none; }
+        .item-card { padding: 15px; background: #fff; border-radius: 12px; margin-bottom: 12px; border: 1px solid #edf2f7; border-left: 8px solid #cbd5e1; display: block; animation: fadeIn 0.3s; }
         .item-card.permanente { border-left-color: var(--accent); }
         .item-card.transitorio { border-left-color: var(--warning); }
         .item-card.nodifiere { border-left-color: var(--success); }
         .header-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
         .code-label { font-family: monospace; font-weight: bold; color: #64748b; font-size: 0.8rem; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; }
         .time-badge { background: var(--dark); color: white; padding: 4px 12px; border-radius: 50px; font-size: 0.8rem; font-weight: bold; }
-        .title-item { font-size: 1.05rem; font-weight: 700; color: #1e293b; display: block; margin-bottom: 5px; }
+        .title-item { font-size: 1.1rem; font-weight: 700; color: #1e293b; display: block; margin-bottom: 5px; }
         .info-detallada { font-size: 0.9rem; line-height: 1.4; color: #475569; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px dashed #cbd5e1; white-space: pre-line; }
         .grid-calc { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end; }
         .btn-calc { background: var(--primary); color: white; border: none; padding: 10px; border-radius: 10px; cursor: pointer; font-weight: bold; height: 45px; }
-        #resultado-calc { margin-top: 15px; padding: 12px; border-radius: 10px; display: none; text-align: center; font-size: 0.95rem; border: 1px solid #bae6fd; }
-        footer { text-align: center; padding: 20px; font-size: 0.8rem; color: #94a3b8; }
+        #resultado-calc { margin-top: 15px; padding: 12px; border-radius: 10px; display: none; text-align: center; border: 1px solid #bae6fd; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -36,15 +36,15 @@
 <div class="container">
     <header>
         <img src="logo-balestrini.jpg" alt="Logo Hospital Balestrini" class="logo">
-        <h1 style="font-size: 1.2rem; margin: 10px 0 0;">HEMOTERAPIA OPERATIVA (PBA)</h1>
-        <p style="font-size: 0.8rem; color: #64748b; margin: 4px 0;">Base: Ley 22.990 & Resumen Criterios 2025</p>
+        <h1 style="font-size: 1.2rem; margin: 10px 0 0;">Criterios de Donación 2025</h1>
+        <p style="font-size: 0.8rem; color: #64748b;">Basado en Planilla HEMO 2 y Ley 22.990</p>
     </header>
 
     <div class="card-main">
-        <h2><i class="fa-solid fa-magnifying-glass"></i> Buscador de Diferimientos</h2>
+        <h2><i class="fa-solid fa-magnifying-glass"></i> Buscador Inteligente</h2>
         <div class="search-container">
             <i class="fa-solid fa-search search-icon"></i>
-            <input type="text" id="searchInput" class="search-box" placeholder="Ej: Sabin, PREP, Stent, TBC, Hemoglobina...">
+            <input type="text" id="searchInput" class="search-box" placeholder="Ej: Sabin, Stent, Anemia, PREP, TBC...">
         </div>
         <div id="resultsList"></div>
     </div>
@@ -53,10 +53,10 @@
         <h2><i class="fa-solid fa-calendar-check"></i> Calculador de Intervalos</h2>
         <div class="grid-calc">
             <div><label style="font-size: 0.75rem;">Última donación:</label><input type="date" id="fechaUltima" style="width:100%; padding:8px; border-radius:8px; border:1px solid #ccc;"></div>
-            <div><label style="font-size: 0.75rem;">Donante:</label>
+            <div><label style="font-size: 0.75rem;">Tipo de Donante:</label>
                 <select id="tipoDonante" style="width:100%; padding:8px; border-radius:8px; border:1px solid #ccc;">
-                    <option value="8">Masculino (8 semanas)</option>
-                    <option value="12">Femenino (12 semanas)</option>
+                    <option value="8">Hombre (8 semanas)</option>
+                    <option value="12">Mujer (12 semanas)</option>
                     <option value="26">Menor 16-18 años (6 meses)</option>
                 </select>
             </div>
@@ -80,17 +80,25 @@
     }
 
     const db = [
-        // PARÁMETROS FÍSICOS
-        { c: "VALOR", d: "Hemoglobina / Hematocrito", t: "12,5 a 17 gr/dl", i: "Hb: 12,5 a 17 gr/dl. Hto: 38% a 52%.\nHE7 (T-6 meses): Si Hb < 12,5.", cat: "nodifiere" },
-        { c: "VALOR", d: "Tensión Arterial (TA)", t: "100-170 / 60-100 mmHg", i: "Sistólica: 100-170. Diastólica: 60-100.\nCV10 (T-1 mes): HTA al momento de donar.", cat: "nodifiere" },
-        { c: "VALOR", d: "Peso Mínimo", t: "50 kg", i: "El donante debe pesar al menos 50 kg para ser apto.", cat: "nodifiere" },
+        // VACUNAS (VC) - DEL RESUMEN PDF
+        { c: "VC2", d: "Sabin (Polio Oral) / BCG / Triple Viral", t: "4 Semanas", i: "Diferimiento por vacunas de virus/bacterias vivas atenuadas (Sabin oral, Fiebre Amarilla, Sarampión, Rubéola, Varicela).", cat: "transitorio" },
+        { c: "VC3", d: "Salk (Inyectable) / Gripe / COVID / Tétanos", t: "No difiere", i: "Virus inactivados o recombinantes. Apto si el donante está asintomático.", cat: "nodifiere" },
+        { c: "VC1", d: "Vacuna Antirrábica", t: "12 Meses", i: "Si hubo mordedura o exposición. Si fue profiláctica sin mordedura, no difiere.", cat: "transitorio" },
 
-        // MEDICAMENTOS (MD)
-        { c: "MD (P)", d: "Insulina / Digoxina / Anticoagulantes", t: "Permanente", i: "Incluye quimioterapia, antipsicóticos, anticonvulsivantes y etretinato.", cat: "permanente" },
-        { c: "MD (T)", d: "Acitretina (Neotigason)", t: "3 Años", i: "Diferimiento por tratamiento dermatológico.", cat: "transitorio" },
-        { c: "MD (T)", d: "Antibióticos", t: "7 Días", i: "Excepto tetraciclina, doxiciclina y eritromicina que no difieren.", cat: "transitorio" },
-        { c: "MD (T)", d: "Finasteride / Isotretinoína (Roacutan)", t: "1 Mes", i: "Diferimiento transitorio de 1 mes.", cat: "transitorio" },
+        // CARDIO (CV)
+        { c: "CV9", d: "Stent / Cateterismo / Angioplastia", t: "6 Meses", i: "Procedimientos invasivos cardiovasculares y estudios hemodinámicos.", cat: "transitorio" },
+        { c: "CV1", d: "Infarto / Coronariopatía / ACV", t: "Permanente", i: "Diferimiento definitivo por seguridad del donante (Incluye SN4).", cat: "permanente" },
 
-        // VACUNAS (VC)
-        { c: "VC2", d: "Sabin (Oral) / Triple Viral / BCG", t: "4 Semanas", i: "Virus/bacterias vivas atenuadas: Polio oral (Sabin), BCG, Fiebre Amarilla, Sarampión, Rubéola, Varicela, Rotavirus.", cat: "transitorio" },
-        { c: "VC3", d: "Salk (Inyectable) / Gripe / COVID / Tétanos", t: "No difiere", i: "Virus inactivados o recombinantes: Polio inyectable (Salk), dT, DTPa, Influenza, HPV, Hep A/B (sin exposición).", cat: "nodifiere" },
+        // INFECTO Y RIESGO
+        { c: "PREP / PEP", d: "Profilaxis VIH (Pre/Post Exposición)", t: "6 Meses / 2 Años", i: "Vía oral: 6 meses. Inyectable (Cabotegravir): 2 años.", cat: "transitorio" },
+        { c: "IN7 / IN8", d: "Tuberculosis (TBC) / Osteomielitis", t: "2 Años", i: "Diferimiento desde la curación definitiva.", cat: "transitorio" },
+        { c: "IN14", d: "Mononucleosis Infecciosa", t: "6 Meses", i: "Desde el alta médica definitiva.", cat: "transitorio" },
+
+        // PARÁMETROS HEMO 2
+        { c: "HE7", d: "Hemoglobina Baja / Anemia", t: "6 Meses", i: "Si Hb < 12,5 gr/dl. Derivar para estudio y tratamiento.", cat: "transitorio" },
+        { c: "VALOR", d: "Hemoglobina (Rango Normal)", t: "12,5 - 17 gr/dl", i: "Límites para aceptar al donante. Hematocrito: 38% a 52%.", cat: "nodifiere" },
+        
+        // MEDICAMENTOS
+        { c: "MD (T)", d: "Antibióticos", t: "7 Días", i: "Tras finalizar tratamiento. Excepto tetraciclinas (no difieren).", cat: "transitorio" },
+        { c: "MD (T)", d: "Isotretinoína (Roacutan) / Finasteride", t: "1 Mes", i: "Por potencial teratogénico.", cat: "transitorio" },
+        { c: "MD (P)", d: "Insulina / Anticoagulantes / Digoxina", t: "Permanente", i: "Uso crónico de medicación inhabilitante.", cat
